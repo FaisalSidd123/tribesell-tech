@@ -32,7 +32,7 @@ export default function Contact() {
     <section id="contact" className="py-32 bg-[#0F0F10] relative z-10 overflow-hidden">
 
       {/* Ambient glowing wash shape */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-[130px] pointer-events-none z-0" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-red/5 rounded-full blur-[130px] pointer-events-none z-0" />
 
       {/* Ghost number background */}
       <div className="absolute top-8 left-6 md:left-16 text-[180px] md:text-[240px] font-display font-bold text-white/[0.02] leading-none select-none pointer-events-none z-0">
@@ -47,11 +47,11 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewport}
           transition={{ duration: 0.9, ease }}
-          className="bg-indigo-500/5 border border-white/5 rounded-3xl p-8 md:p-16 text-left relative overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16"
+          className="bg-brand-red/5 border border-white/5 rounded-2xl md:rounded-3xl p-5 sm:p-8 md:p-16 text-left relative overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12 lg:gap-16"
         >
           
           {/* Background Wash inside Card */}
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[80px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-red/5 rounded-full blur-[80px] pointer-events-none" />
 
           {/* Left Column (Info) */}
           <div className="lg:col-span-5 flex flex-col justify-between relative z-10">
@@ -62,10 +62,10 @@ export default function Contact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={viewport}
                 transition={{ duration: 0.6, ease }}
-                className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/10 border border-indigo-500/15 rounded-full mb-5"
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-red/10 border border-brand-red/15 rounded-full mb-5"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                <span className="text-[10px] font-bold tracking-[0.15em] text-indigo-400 uppercase">Get In Touch</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse" />
+                <span className="text-[10px] font-bold tracking-[0.15em] text-brand-red uppercase">Get In Touch</span>
               </motion.div>
 
               {/* Dramatic CTA headline — scales in */}
@@ -74,9 +74,9 @@ export default function Contact() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={viewport}
                 transition={{ duration: 0.9, ease, delay: 0.1 }}
-                className="text-4xl md:text-5xl font-display font-bold tracking-tight text-white mb-6 leading-tight max-w-md"
+                className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-4 md:mb-6 leading-tight max-w-md"
               >
-                Let's construct <br />something <span className="text-indigo-400">great.</span>
+                Let's construct <br />something <span className="text-brand-red">great.</span>
               </motion.h2>
 
               <motion.p
@@ -99,7 +99,7 @@ export default function Contact() {
             >
               <div>
                 <p className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase">Direct Email</p>
-                <a href="mailto:hello@tribesell.com" className="text-base font-semibold text-white hover:text-indigo-400 transition-colors">
+                <a href="mailto:hello@tribesell.com" className="text-base font-semibold text-white hover:text-brand-red transition-colors">
                   hello@tribesell.com
                 </a>
               </div>
@@ -118,7 +118,7 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewport}
             transition={{ type: "spring", stiffness: 200, damping: 30, delay: 0.3 }}
-            className="lg:col-span-7 relative z-10 bg-[#161618] border border-white/5 rounded-2xl p-6 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.25)]"
+            className="lg:col-span-7 relative z-10 bg-[#161618] border border-white/5 rounded-xl md:rounded-2xl p-5 sm:p-6 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.25)]"
           >
             {isSuccess ? (
               <motion.div
@@ -135,7 +135,7 @@ export default function Contact() {
                 </p>
                 <button
                   onClick={() => setIsSuccess(false)}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-indigo-400 hover:text-indigo-300 hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-bold text-brand-red hover:text-brand-red/80 hover:underline"
                 >
                   Submit another message <ArrowRight className="w-3 h-3" />
                 </button>
@@ -155,7 +155,7 @@ export default function Contact() {
                       placeholder="e.g. John Doe"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-indigo-500 focus:bg-neutral-950 rounded-lg text-sm text-white placeholder-neutral-600 outline-hidden transition-all"
+                      className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-brand-red focus:bg-neutral-950 rounded-lg text-sm text-white placeholder-neutral-600 outline-hidden transition-all"
                     />
                   </div>
 
@@ -171,7 +171,7 @@ export default function Contact() {
                       placeholder="e.g. john@company.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-indigo-500 focus:bg-neutral-950 rounded-lg text-sm text-white placeholder-neutral-600 outline-hidden transition-all"
+                      className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-brand-red focus:bg-neutral-950 rounded-lg text-sm text-white placeholder-neutral-600 outline-hidden transition-all"
                     />
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export default function Contact() {
                     id="budget"
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-indigo-500 focus:bg-neutral-950 rounded-lg text-sm text-white outline-hidden transition-all cursor-pointer"
+                    className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-brand-red focus:bg-neutral-950 rounded-lg text-sm text-white outline-hidden transition-all cursor-pointer"
                   >
                     <option value="Less than $10k">Less than $10,000</option>
                     <option value="$10k - $25k">$10,000 &ndash; $25,000</option>
@@ -206,7 +206,7 @@ export default function Contact() {
                     placeholder="Tell us about the features, app screens, or branding style you want to build..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-indigo-500 focus:bg-neutral-950 rounded-lg text-sm text-white placeholder-neutral-600 outline-hidden transition-all resize-none"
+                    className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-brand-red focus:bg-neutral-950 rounded-lg text-sm text-white placeholder-neutral-600 outline-hidden transition-all resize-none"
                   />
                 </div>
 
@@ -216,7 +216,7 @@ export default function Contact() {
                   disabled={isSubmitting}
                   whileHover={{ y: -3, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-medium rounded-xl shadow-md hover:shadow-lg hover:shadow-indigo-600/15 transition-all duration-250 cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-brand-red hover:bg-opacity-90 disabled:bg-brand-red/50 text-white font-medium rounded-xl shadow-md hover:shadow-lg hover:shadow-brand-red/15 transition-all duration-250 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">

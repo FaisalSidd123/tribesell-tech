@@ -119,35 +119,55 @@ export default function TrustStrip() {
         Technologies & platforms we work with
       </p>
 
+      {/* Inject Custom CSS for Tech Marquee */}
+      <style>{`
+        @keyframes scroll-tech-marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-tech-marquee {
+          animation: scroll-tech-marquee 15s linear infinite;
+        }
+        @media (max-width: 768px) {
+          .animate-tech-marquee {
+            animation-duration: 10s; /* Faster on mobile */
+          }
+        }
+      `}</style>
+
       {/* Infinite scrolling marquee */}
       <div className="relative w-full">
         {/* Left fade mask */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#FAFAF9] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-[#FAFAF9] to-transparent z-10 pointer-events-none" />
         {/* Right fade mask */}
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#FAFAF9] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-[#FAFAF9] to-transparent z-10 pointer-events-none" />
 
-        <div className="flex animate-marquee">
+        <div className="flex animate-tech-marquee w-max">
           {/* First set */}
-          <div className="flex shrink-0 items-center gap-16 px-8">
+          <div className="flex shrink-0 items-center gap-8 md:gap-16 px-4 md:px-8">
             {LOGOS.map((logo) => (
               <div
                 key={logo.name}
-                className="flex items-center gap-2.5 text-neutral-400 hover:text-[#0F0F0F] transition-colors duration-300 shrink-0 select-none"
+                className="flex items-center gap-2 md:gap-2.5 text-neutral-400 hover:text-[#0F0F0F] transition-colors duration-300 shrink-0 select-none"
               >
-                {logo.svg}
-                <span className="text-xs font-semibold tracking-wide whitespace-nowrap">{logo.label}</span>
+                <div className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+                  {logo.svg}
+                </div>
+                <span className="text-[10px] md:text-xs font-semibold tracking-wide whitespace-nowrap">{logo.label}</span>
               </div>
             ))}
           </div>
           {/* Duplicate set for seamless loop */}
-          <div className="flex shrink-0 items-center gap-16 px-8" aria-hidden="true">
+          <div className="flex shrink-0 items-center gap-8 md:gap-16 px-4 md:px-8" aria-hidden="true">
             {LOGOS.map((logo) => (
               <div
                 key={`dup-${logo.name}`}
-                className="flex items-center gap-2.5 text-neutral-400 hover:text-[#0F0F0F] transition-colors duration-300 shrink-0 select-none"
+                className="flex items-center gap-2 md:gap-2.5 text-neutral-400 hover:text-[#0F0F0F] transition-colors duration-300 shrink-0 select-none"
               >
-                {logo.svg}
-                <span className="text-xs font-semibold tracking-wide whitespace-nowrap">{logo.label}</span>
+                <div className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+                  {logo.svg}
+                </div>
+                <span className="text-[10px] md:text-xs font-semibold tracking-wide whitespace-nowrap">{logo.label}</span>
               </div>
             ))}
           </div>

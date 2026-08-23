@@ -21,7 +21,6 @@ export default function Navbar({ theme = 'light' }) {
     { name: 'Services', href: '#services' },
     { name: 'Process', href: '#process' },
     { name: 'Portfolio', href: '#portfolio' },
-    { name: 'Why Us', href: '#why-us' },
     { name: 'Testimonials', href: '#testimonials' },
   ];
 
@@ -46,11 +45,11 @@ export default function Navbar({ theme = 'light' }) {
           : 'bg-transparent border-b border-transparent py-6'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between relative">
+        {/* Logo (Left) */}
         <a
           href="#"
-          className={`flex items-center gap-2.5 text-xl font-display font-bold tracking-tight transition-colors duration-300 ${
+          className={`flex items-center gap-2.5 text-xl font-display font-bold transition-colors duration-300 relative z-10 ${
             isDark ? 'text-white' : 'text-[#0F0F0F]'
           }`}
         >
@@ -58,44 +57,45 @@ export default function Navbar({ theme = 'light' }) {
           <span>TribeSell</span>
         </a>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
-          <div className="flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => handleLinkClick(e, link.href)}
-                className={`text-sm font-medium transition-colors duration-300 ${
-                  isDark
-                    ? 'text-white/70 hover:text-indigo-400'
-                    : 'text-[#0F0F0F]/70 hover:text-indigo-600'
-                }`}
-              >
-                {link.name}
-              </a>
-            ))}
-          </div>
+        {/* Desktop Nav Links (Center) */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              onClick={(e) => handleLinkClick(e, link.href)}
+              className={`text-sm font-medium transition-colors duration-300 ${
+                isDark
+                  ? 'text-white/70 hover:text-brand-red'
+                  : 'text-[#0F0F0F]/70 hover:text-brand-red'
+              }`}
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
+
+        {/* Desktop CTA & Mobile Toggle (Right) */}
+        <div className="flex items-center gap-4 relative z-10">
           <a
             href="#contact"
             onClick={(e) => handleLinkClick(e, '#contact')}
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-semibold tracking-wider uppercase text-white bg-indigo-600 rounded-full hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-600/10 transition-all duration-200"
+            className="hidden md:inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-semibold tracking-wider uppercase text-white bg-brand-red rounded-full hover:bg-[#c93e37] hover:shadow-lg hover:shadow-brand-red/20 transition-all duration-200"
           >
             Start a Project
             <ArrowUpRight className="w-3.5 h-3.5" />
           </a>
-        </div>
 
-        {/* Mobile Toggle */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={`md:hidden p-1.5 transition-colors duration-300 ${
-            isDark ? 'text-white/80 hover:text-indigo-400' : 'text-[#0F0F0F]/80 hover:text-indigo-600'
-          }`}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className={`md:hidden p-1.5 transition-colors duration-300 ${
+              isDark ? 'text-white/80 hover:text-brand-red' : 'text-[#0F0F0F]/80 hover:text-brand-red'
+            }`}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -114,7 +114,7 @@ export default function Navbar({ theme = 'light' }) {
                 href={link.href}
                 onClick={(e) => handleLinkClick(e, link.href)}
                 className={`text-lg font-medium transition-colors duration-300 ${
-                  isDark ? 'text-white/80 hover:text-indigo-400' : 'text-[#0F0F0F]/80 hover:text-indigo-600'
+                  isDark ? 'text-white/80 hover:text-brand-red' : 'text-[#0F0F0F]/80 hover:text-brand-red'
                 }`}
               >
                 {link.name}
@@ -124,7 +124,7 @@ export default function Navbar({ theme = 'light' }) {
           <a
             href="#contact"
             onClick={(e) => handleLinkClick(e, '#contact')}
-            className="w-full text-center py-3.5 text-sm font-semibold text-white bg-indigo-600 rounded-full hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-600/10"
+            className="w-full text-center py-3.5 text-sm font-semibold text-white bg-brand-red rounded-full hover:bg-[#c93e37] transition-colors shadow-md shadow-brand-red/20"
           >
             Start a Project
           </a>

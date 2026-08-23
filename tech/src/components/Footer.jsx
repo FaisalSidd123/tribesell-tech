@@ -34,7 +34,7 @@ export default function Footer() {
           <a
             href="#"
             onClick={handleScrollTop}
-            className="flex items-center gap-2.5 text-lg font-display font-bold tracking-tight text-white"
+            className="flex items-center gap-2.5 text-lg font-display font-bold text-white"
           >
             <img src="/tribesell_logo.png" alt="TribeSell" className="w-7 h-7 object-contain" />
             <span>TribeSell</span>
@@ -45,20 +45,17 @@ export default function Footer() {
         </div>
 
         {/* Middle - Navigation */}
-        <div className="flex flex-wrap gap-x-8 gap-y-3 items-center">
-          <a href="#services" onClick={(e) => handleLinkClick(e, '#services')} className="text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
+        <div className="flex flex-wrap gap-x-6 gap-y-4 items-center">
+          <a href="#services" onClick={(e) => handleLinkClick(e, '#services')} className="text-sm md:text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
             Services
           </a>
-          <a href="#process" onClick={(e) => handleLinkClick(e, '#process')} className="text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
+          <a href="#process" onClick={(e) => handleLinkClick(e, '#process')} className="text-sm md:text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
             Process
           </a>
-          <a href="#portfolio" onClick={(e) => handleLinkClick(e, '#portfolio')} className="text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
+          <a href="#portfolio" onClick={(e) => handleLinkClick(e, '#portfolio')} className="text-sm md:text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
             Portfolio
           </a>
-          <a href="#why-us" onClick={(e) => handleLinkClick(e, '#why-us')} className="text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
-            Why Us
-          </a>
-          <a href="#testimonials" onClick={(e) => handleLinkClick(e, '#testimonials')} className="text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
+          <a href="#testimonials" onClick={(e) => handleLinkClick(e, '#testimonials')} className="text-sm md:text-xs font-semibold text-neutral-400 hover:text-white transition-colors duration-200">
             Testimonials
           </a>
         </div>

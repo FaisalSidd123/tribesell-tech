@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Quote } from 'lucide-react';
 
 const TESTIMONIALS = [
   {
@@ -26,194 +26,116 @@ const TESTIMONIALS = [
   }
 ];
 
-// Shared animation constants
+// Duplicate the array 4 times to create a massive seamless loop.
+// Shifting by exactly -25% will shift perfectly by 1 full set.
+const MARQUEE_ITEMS = [...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS];
+
 const ease = [0.16, 1, 0.3, 1];
 const viewport = { once: true, amount: 0.2 };
 
 export default function Testimonials() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-
-  const handlePrev = () => {
-    setDirection(-1);
-    setActiveIndex((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setDirection(1);
-    setActiveIndex((prev) => (prev === TESTIMONIALS.length - 1 ? 0 : prev + 1));
-  };
-
-  const slideVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 80 : -80,
-      opacity: 0,
-      filter: 'blur(6px)'
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      filter: 'blur(0px)'
-    },
-    exit: (direction) => ({
-      x: direction < 0 ? 80 : -80,
-      opacity: 0,
-      filter: 'blur(6px)'
-    })
-  };
-
   return (
-    <section id="testimonials" className="py-24 md:py-32 bg-[#FAFAF9] relative z-10 border-t border-[#0F0F0F]/5">
-      <div className="max-w-7xl mx-auto px-6">
-        
-        {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16 md:mb-20">
-          <div className="max-w-xl text-left">
-            {/* Eyebrow pill badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewport}
-              transition={{ duration: 0.6, ease }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/8 border border-indigo-500/10 rounded-full mb-5"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-pulse" />
-              <span className="text-[10px] font-bold tracking-[0.15em] text-indigo-700 uppercase">Client Feedback</span>
-            </motion.div>
+    <section id="testimonials" className="py-24 md:py-32 bg-[#FAFAF9] relative z-10 border-t border-[#0F0F0F]/5 overflow-hidden">
+      
+      {/* Inject Custom CSS for Infinite Marquee */}
+      <style>{`
+        @keyframes scroll-marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-25%); }
+        }
+        .animate-marquee {
+          animation: scroll-marquee 25s linear infinite;
+        }
+        .group-marquee:hover .animate-marquee {
+          animation-play-state: paused;
+        }
+      `}</style>
 
-            {/* Split-weight headline */}
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewport}
-              transition={{ duration: 0.8, ease, delay: 0.1 }}
-              className="text-3xl md:text-4xl font-display font-bold tracking-tight leading-[1.15] max-w-xl"
-            >
-              <span className="text-[#0F0F0F]">What builders and brands say </span>
-              <span className="text-neutral-400">about our deliveries.</span>
-            </motion.h2>
-          </div>
-
-          {/* Right: Navigation arrows (desktop) */}
+      <div className="max-w-6xl mx-auto px-6 mb-16 md:mb-20">
+        {/* Centered Section Header */}
+        <div className="flex flex-col items-center justify-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewport}
-            transition={{ duration: 0.6, ease, delay: 0.3 }}
-            className="hidden lg:flex items-center gap-3"
+            transition={{ duration: 0.6, ease }}
+            className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-navy/5 border border-brand-navy/10 rounded-full mb-5"
           >
-            <motion.button
-              onClick={handlePrev}
-              whileHover={{ y: -3, scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-11 h-11 rounded-full border border-[#0F0F0F]/10 hover:border-indigo-600 hover:text-indigo-600 flex items-center justify-center bg-white text-[#0F0F0F]/80 shadow-xs hover:shadow-md transition-all duration-200"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </motion.button>
-            
-            <motion.button
-              onClick={handleNext}
-              whileHover={{ y: -3, scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-11 h-11 rounded-full border border-[#0F0F0F]/10 hover:border-indigo-600 hover:text-indigo-600 flex items-center justify-center bg-white text-[#0F0F0F]/80 shadow-xs hover:shadow-md transition-all duration-200"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </motion.button>
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse" />
+            <span className="text-[10px] font-bold tracking-[0.15em] text-brand-navy uppercase">Client Feedback</span>
           </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
+            transition={{ duration: 0.8, ease, delay: 0.1 }}
+            className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-[#0F0F0F] mb-4"
+          >
+            What Our Clients Say
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
+            transition={{ duration: 0.8, ease, delay: 0.2 }}
+            className="text-neutral-500 text-sm md:text-base max-w-md"
+          >
+            Real feedback from the brands and builders we partner with.
+          </motion.p>
         </div>
-
-        {/* Testimonial Box — blur-to-focus transition */}
-        <motion.div
-          initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={viewport}
-          transition={{ duration: 0.9, ease, delay: 0.2 }}
-          className="relative max-w-4xl"
-        >
-          {/* Main Card */}
-          <div className="bg-white border border-[#0F0F0F]/5 rounded-3xl p-8 md:p-16 text-left shadow-[0_15px_40px_rgba(0,0,0,0.015)] relative overflow-hidden min-h-[380px] md:min-h-[320px] flex flex-col justify-between">
-            {/* Top decorative quote icon */}
-            <div className="absolute top-6 right-8 text-neutral-100 select-none pointer-events-none">
-              <Quote className="w-24 h-24 stroke-[1.5]" />
-            </div>
-
-            <div className="relative z-10 flex-grow">
-              <AnimatePresence initial={false} custom={direction} mode="wait">
-                <motion.div
-                  key={activeIndex}
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.5, ease }}
-                  className="flex flex-col h-full justify-between"
-                >
-                  {/* Quote content */}
-                  <p className="text-[#0F0F0F] font-display text-lg md:text-2xl font-medium leading-relaxed mb-8 max-w-2xl">
-                    &ldquo;{TESTIMONIALS[activeIndex].quote}&rdquo;
-                  </p>
-
-                  {/* Client Info */}
-                  <div className="flex items-center gap-4 mt-auto">
-                    <img
-                      src={TESTIMONIALS[activeIndex].avatar}
-                      alt={TESTIMONIALS[activeIndex].author}
-                      className="w-12 h-12 rounded-full object-cover border border-[#0F0F0F]/5"
-                    />
-                    <div>
-                      <p className="text-sm font-semibold text-[#0F0F0F]">{TESTIMONIALS[activeIndex].author}</p>
-                      <p className="text-xs text-neutral-400">
-                        {TESTIMONIALS[activeIndex].role} &bull; <span className="text-indigo-600">{TESTIMONIALS[activeIndex].company}</span>
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* Mobile Carousel Arrows */}
-          <div className="flex items-center justify-end gap-3 mt-8 lg:hidden">
-            <motion.button
-              onClick={handlePrev}
-              whileHover={{ y: -3, scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-11 h-11 rounded-full border border-[#0F0F0F]/10 hover:border-indigo-600 hover:text-indigo-600 flex items-center justify-center bg-white text-[#0F0F0F]/80 shadow-xs hover:shadow-md transition-all duration-200"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </motion.button>
-            
-            <motion.button
-              onClick={handleNext}
-              whileHover={{ y: -3, scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-11 h-11 rounded-full border border-[#0F0F0F]/10 hover:border-indigo-600 hover:text-indigo-600 flex items-center justify-center bg-white text-[#0F0F0F]/80 shadow-xs hover:shadow-md transition-all duration-200"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </motion.button>
-          </div>
-
-          {/* Dot indicators */}
-          <div className="flex items-center gap-2 mt-6">
-            {TESTIMONIALS.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => { setDirection(i > activeIndex ? 1 : -1); setActiveIndex(i); }}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === activeIndex ? 'w-8 bg-indigo-600' : 'w-1.5 bg-[#0F0F0F]/10 hover:bg-[#0F0F0F]/20'
-                }`}
-                aria-label={`Go to testimonial ${i + 1}`}
-              />
-            ))}
-          </div>
-        </motion.div>
-
       </div>
+
+      {/* Infinite Scrolling Marquee */}
+      <motion.div
+        initial={{ opacity: 0, filter: 'blur(6px)' }}
+        whileInView={{ opacity: 1, filter: 'blur(0px)' }}
+        viewport={viewport}
+        transition={{ duration: 0.9, ease, delay: 0.2 }}
+        className="w-full relative flex items-center group-marquee"
+        style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }} // Forces element to span the full browser width regardless of parent container
+      >
+        {/* Edge Fade Gradients for smooth entrance/exit */}
+        <div className="absolute inset-y-0 left-0 w-12 md:w-32 bg-gradient-to-r from-[#FAFAF9] to-transparent z-20 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-12 md:w-32 bg-gradient-to-l from-[#FAFAF9] to-transparent z-20 pointer-events-none" />
+
+        {/* The Scrolling Track */}
+        <div className="flex w-max animate-marquee py-4">
+          {MARQUEE_ITEMS.map((testimonial, idx) => (
+            <div 
+              key={idx} 
+              className="w-[260px] sm:w-[320px] md:w-[420px] lg:w-[480px] bg-white border border-[#0F0F0F]/5 rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)] transition-shadow duration-300 relative overflow-hidden flex flex-col justify-between shrink-0 group mr-4 md:mr-8"
+            >
+              {/* Top decorative quote icon */}
+              <div className="absolute top-4 right-4 md:top-6 md:right-6 text-neutral-100 group-hover:text-brand-red/5 transition-colors duration-300 select-none pointer-events-none z-0">
+                <Quote className="w-10 h-10 md:w-16 md:h-16 stroke-[1.5]" />
+              </div>
+
+              <div className="relative z-10 flex-grow flex flex-col justify-between h-full">
+                <p className="text-[#0F0F0F] font-display text-xs sm:text-sm md:text-lg font-medium leading-relaxed mb-6 md:mb-8 pr-6 md:pr-8">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </p>
+
+                <div className="flex items-center gap-3 md:gap-4 mt-auto">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.author}
+                    className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-[#0F0F0F]/5 shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-[11px] md:text-sm font-semibold text-[#0F0F0F] truncate">{testimonial.author}</p>
+                    <p className="text-[9px] md:text-xs text-neutral-400 truncate">
+                      {testimonial.role} &bull; <span className="text-brand-red">{testimonial.company}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+      
     </section>
   );
 }

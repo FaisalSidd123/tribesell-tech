@@ -2,7 +2,18 @@
 
 @theme {
   --font-sans: 'Inter', sans-serif;
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-display: 'Clash Display', 'Inter', system-ui, sans-serif;
+  
+  /* TribeSell Brand Palette */
+  --color-brand-red: #E14D45;
+  --color-brand-navy: #1A2942;
+}
+
+/* Fix for Clash Display cramped lettering */
+@layer base {
+  .font-display {
+    letter-spacing: 0.02em;
+  }
 }
 
 /* Custom Scrollbar */
@@ -43,8 +54,8 @@ html.lenis, html.lenis body {
 
 /* Custom selection styling */
 ::selection {
-  background-color: rgba(79, 70, 229, 0.15); /* Indigo tint */
-  color: #4F46E5;
+  background-color: rgba(225, 77, 69, 0.15); /* brand-red tint */
+  color: #E14D45;
 }
 
 /* Soft blur wash styling for background blob */
@@ -53,7 +64,7 @@ html.lenis, html.lenis body {
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, rgba(79, 70, 229, 0) 70%);
+  background: radial-gradient(circle, rgba(225, 77, 69, 0.12) 0%, rgba(225, 77, 69, 0) 70%);
   filter: blur(80px);
   pointer-events: none;
   z-index: 0;
@@ -72,7 +83,7 @@ html.lenis, html.lenis body {
   top: 0;
   left: 0;
   height: 100%;
-  background-color: #4F46E5;
+  background-color: #E14D45;
   width: 0%;
 }
 

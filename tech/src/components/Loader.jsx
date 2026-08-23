@@ -148,7 +148,7 @@ export default function Loader({ onComplete, onExitStart }) {
             <span
               key={index}
               ref={(el) => (lettersRef.current[index + 1] = el)}
-              className="text-white font-display font-bold text-4xl md:text-5xl tracking-tight select-none display-inline"
+              className="text-white font-display font-bold text-4xl md:text-5xl select-none display-inline"
             >
               {char}
             </span>
@@ -161,7 +161,7 @@ export default function Loader({ onComplete, onExitStart }) {
           <div className="w-full h-[1.5px] bg-white/10 rounded-full overflow-hidden">
             <div
               ref={progressRef}
-              className="h-full bg-indigo-500 rounded-full"
+              className="h-full bg-brand-red rounded-full"
             />
           </div>
 

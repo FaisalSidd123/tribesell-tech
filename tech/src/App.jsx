@@ -11,7 +11,7 @@ import TrustStrip from './components/TrustStrip';
 import Services from './components/Services';
 import Process from './components/Process';
 import Portfolio from './components/Portfolio';
-import WhyUs from './components/WhyUs';
+
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -35,6 +35,7 @@ export default function App() {
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
+      smoothTouch: true, // Enables smooth scroll on mobile/touch devices
       wheelMultiplier: 1,
       touchMultiplier: 2,
     });
@@ -93,7 +94,7 @@ export default function App() {
   }, [isLoading]);
 
   return (
-    <div className="w-full min-h-screen bg-[#FAFAF9] text-[#0F0F0F] relative selection:bg-indigo-500/10 selection:text-indigo-600">
+    <div className="w-full min-h-screen bg-[#FAFAF9] text-[#0F0F0F] relative selection:bg-brand-red/10 selection:text-brand-red">
       {/* Intro Loader Animation Overlay */}
       {isLoading && (
         <Loader
@@ -106,7 +107,7 @@ export default function App() {
       <Navbar theme={navTheme} />
 
       {/* Hero Section */}
-      <div className="section-light">
+      <div className="section-dark">
         <Hero start={startHero} />
       </div>
 
@@ -141,11 +142,6 @@ export default function App() {
 
       {/* ── Divider: Dark → Light ── */}
       <div className="h-24 bg-gradient-to-b from-[#0F0F10] via-[#0F0F10]/60 to-[#FAFAF9]" />
-
-      {/* Why Us Section */}
-      <div className="section-light">
-        <WhyUs />
-      </div>
 
       {/* Testimonials Section */}
       <div className="section-light">

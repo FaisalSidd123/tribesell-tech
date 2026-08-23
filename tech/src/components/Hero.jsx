@@ -1,43 +1,109 @@
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight, CheckCircle2, Star, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
-export default function Hero({ start = false }) {
+const HERO_IMAGES = [
+  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1920&q=80&auto=format", // Web Dev (laptop code)
+  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80&auto=format", // Mobile Dev (clean dark UI dashboard on phone)
+  "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=1920&q=80&auto=format"  // UI/UX Design (wireframing/design process)
+];
+
+export default function Hero() {
   const heroRef = useRef(null);
-  const leftColRef = useRef(null);
-  const rightColRef = useRef(null);
+
+  // Preload secondary images
+  useEffect(() => {
+    HERO_IMAGES.slice(1).forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // GSAP ScrollTrigger parallax scrub
     const ctx = gsap.context(() => {
-      // Parallax for right column mockup visual
-      gsap.to(rightColRef.current, {
-        yPercent: -12,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1.2,
-        },
-      });
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Fade and slight pull down for left column text on scroll
-      gsap.to(leftColRef.current, {
-        opacity: 0.25,
-        yPercent: 8,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1,
-        },
-      });
+      if (prefersReducedMotion) {
+        gsap.set(".hero-anim", { opacity: 1, y: 0 });
+        gsap.set(".hero-bg-wrapper", { opacity: 1 });
+        return;
+      }
+
+      // Master Entrance Timeline
+      const tl = gsap.timeline();
+
+      // Fade in background gently
+      tl.fromTo(".hero-bg-wrapper", { opacity: 0 }, { opacity: 1, duration: 2, ease: "power2.inOut" }, 0);
+
+      // Staggered text & UI reveal
+      tl.from(".hero-anim-1", { opacity: 0, y: 15, duration: 0.7, ease: "power3.out" }, 0)
+        .from(".hero-anim-2", { opacity: 0, y: 15, duration: 0.7, ease: "power3.out" }, 0.05)
+        .from(".hero-anim-3", { opacity: 0, y: 15, duration: 0.7, ease: "power3.out" }, 0.1)
+        .from(".hero-anim-4", { opacity: 0, y: 15, duration: 0.7, ease: "power3.out" }, 0.15)
+        .from(".hero-anim-5", { opacity: 0, y: 15, duration: 0.7, ease: "power3.out" }, 0.2);
+
+      // Synced Rotating Text Timeline (starts after entrance delay)
+      const phraseTl = gsap.timeline({ repeat: -1, delay: 2.5, repeatDelay: 2.5 });
+
+      const tOut = 0.5;
+      const tIn = 0.6;
+      const tHold = 2.2;
+      const overlap = tOut - 0.1; // 0.4
+
+      // Step 1 -> Step 2 (Frame 0 -> 1)
+      phraseTl.addLabel('f0-out')
+        .to('.line1-0', { y: -15, opacity: 0, duration: tOut, ease: 'power2.in' }, 'f0-out')
+        .to('.line2-0', { y: -15, opacity: 0, duration: tOut, ease: 'power2.in' }, 'f0-out')
+        .fromTo('.line1-1', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f0-out+=${overlap}`)
+        .fromTo('.line2-1', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f0-out+=${overlap}`)
+        .to({}, { duration: tHold }); // Hold
+
+      // Step 2, Phrase 1 -> Phrase 2 (Frame 1 -> 2)
+      phraseTl.addLabel('f1-out')
+        .to('.line2-1', { y: -15, opacity: 0, duration: tOut, ease: 'power2.in' }, 'f1-out')
+        .fromTo('.line2-2', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f1-out+=${overlap}`)
+        .to({}, { duration: tHold }); // Hold
+
+      // Step 2, Phrase 2 -> Phrase 3 (Frame 2 -> 3)
+      phraseTl.addLabel('f2-out')
+        .to('.line2-2', { y: -15, opacity: 0, duration: tOut, ease: 'power2.in' }, 'f2-out')
+        .fromTo('.line2-3', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f2-out+=${overlap}`)
+        .to({}, { duration: tHold }); // Hold
+
+      // Step 2 -> Step 1 (Frame 3 -> 0)
+      phraseTl.addLabel('f3-out')
+        .to('.line1-1', { y: -15, opacity: 0, duration: tOut, ease: 'power2.in' }, 'f3-out')
+        .to('.line2-3', { y: -15, opacity: 0, duration: tOut, ease: 'power2.in' }, 'f3-out')
+        .fromTo('.line1-0', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f3-out+=${overlap}`)
+        .fromTo('.line2-0', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f3-out+=${overlap}`);
+      // Timeline ends here. repeatDelay handles the Frame 0 hold.
+
+      // Background Crossfade & Ken Burns Loop
+      const images = gsap.utils.toArray('.hero-bg-img');
+      let currentBgIndex = 0;
+
+      // Initial Ken Burns for first image
+      gsap.to(images[0], { scale: 1.08, duration: 6, ease: 'none' });
+
+      const animateBg = () => {
+        const nextBgIndex = (currentBgIndex + 1) % images.length;
+
+        // Fade out current
+        gsap.to(images[currentBgIndex], { opacity: 0, duration: 1.5, ease: 'none' });
+
+        // Fade in next and start its Ken Burns
+        gsap.fromTo(images[nextBgIndex],
+          { opacity: 0, scale: 1 },
+          { opacity: 1, scale: 1.08, duration: 6, ease: 'none' }
+        );
+
+        currentBgIndex = nextBgIndex;
+        // Wait 4.5s then trigger next loop
+        gsap.delayedCall(4.5, animateBg);
+      };
+
+      gsap.delayedCall(4.5, animateBg);
+
     }, heroRef);
 
     return () => ctx.revert();
@@ -51,266 +117,113 @@ export default function Hero({ start = false }) {
     }
   };
 
-  // Easing curve
-  const easeCurve = [0.16, 1, 0.3, 1];
-
-  // Framer Motion Variants for Staggered Entrance Sync
-  const eyebrowVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeCurve, delay: 0.1 } }
-  };
-
-  const headlineVariants = {
-    hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeCurve, delay: 0.2 } }
-  };
-
-  const subheadlineVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeCurve, delay: 0.35 } }
-  };
-
-  const ctaVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeCurve, delay: 0.5 } }
-  };
-
-  const trustVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 1, ease: easeCurve, delay: 0.7 } }
-  };
-
-  const mockupVariants = {
-    hidden: { opacity: 0, scale: 0.92 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 1.2, ease: easeCurve, delay: 0.3 } }
-  };
-
-  const chip1Variants = {
-    hidden: { opacity: 0, scale: 0.8, y: 15 },
-    visible: { 
-      opacity: 1, 
-      scale: 1, 
-      y: [0, -6, 0],
-      transition: { 
-        opacity: { duration: 0.5, delay: 0.9 },
-        scale: { duration: 0.5, delay: 0.9 },
-        y: {
-          repeat: Infinity,
-          duration: 4,
-          ease: 'easeInOut',
-          delay: 0.9
-        }
-      }
-    }
-  };
-
-  const chip2Variants = {
-    hidden: { opacity: 0, scale: 0.8, y: 15 },
-    visible: { 
-      opacity: 1, 
-      scale: 1, 
-      y: [0, 8, 0],
-      transition: { 
-        opacity: { duration: 0.5, delay: 1.1 },
-        scale: { duration: 0.5, delay: 1.1 },
-        y: {
-          repeat: Infinity,
-          duration: 5,
-          ease: 'easeInOut',
-          delay: 1.1
-        }
-      }
-    }
-  };
-
-  const chip3Variants = {
-    hidden: { opacity: 0, scale: 0.8, y: -15 },
-    visible: { 
-      opacity: 1, 
-      scale: 1, 
-      y: [0, -8, 0],
-      transition: { 
-        opacity: { duration: 0.5, delay: 1.3 },
-        scale: { duration: 0.5, delay: 1.3 },
-        y: {
-          repeat: Infinity,
-          duration: 4.5,
-          ease: 'easeInOut',
-          delay: 1.3
-        }
-      }
-    }
-  };
-
-  const animState = start ? 'visible' : 'hidden';
-
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden flex items-center bg-[#FAFAF9]"
+      className="relative min-h-screen pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden flex items-center justify-center bg-[#0F0F0F]"
     >
-      {/* Background soft color-wash blob */}
-      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/8 rounded-full blur-[120px] pointer-events-none z-0" />
-      
-      {/* Tech touch: Subtle dot-grid */}
-      <div className="absolute top-0 right-0 w-[45%] h-full bg-[radial-gradient(#E6E6E3_1px,transparent_1px)] [background-size:24px_24px] opacity-60 pointer-events-none z-0 [mask-image:linear-gradient(to_left,white,transparent)]" />
+      {/* --- PREMIUM PHOTOGRAPHIC BACKGROUND --- */}
+      <div className="hero-bg-wrapper opacity-0 absolute inset-0 z-0 overflow-hidden bg-[#0F0F0F]">
 
-      <div className="max-w-7xl mx-auto px-6 w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-        {/* Left Column (55%) */}
-        <div ref={leftColRef} className="lg:col-span-7 flex flex-col items-start text-left">
-          {/* Eyebrow badge */}
-          <motion.div
-            variants={eyebrowVariants}
-            initial="hidden"
-            animate={animState}
-            className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/8 border border-indigo-500/10 rounded-full mb-6"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
-            <span className="text-[10px] font-bold tracking-wider text-indigo-700 uppercase">
-              Web &bull; Mobile &bull; Design
-            </span>
-          </motion.div>
+        {/* Images */}
+        {HERO_IMAGES.map((src, idx) => (
+          <div
+            key={idx}
+            className={`hero-bg-img absolute inset-0 bg-cover bg-center ${idx === 0 ? 'opacity-100' : 'opacity-0'}`}
+            style={{ backgroundImage: `url(${src})` }}
+          />
+        ))}
 
-          {/* Headline */}
-          <motion.h1
-            variants={headlineVariants}
-            initial="hidden"
-            animate={animState}
-            className="text-[#0F0F0F] font-display font-bold tracking-tight text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6"
-            style={{ fontSize: 'clamp(2.75rem, 5.5vw, 4.5rem)' }}
-          >
-            We Build Premium <br />
-            <span className="text-indigo-600">Digital Experiences.</span>
-          </motion.h1>
+        {/* --- COLOR GRADING & CONTRAST OVERLAYS --- */}
 
-          {/* Subheadline */}
-          <motion.p
-            variants={subheadlineVariants}
-            initial="hidden"
-            animate={animState}
-            className="text-neutral-500 text-lg md:text-xl font-normal leading-relaxed max-w-[500px] mb-8"
-          >
-            TribeSell is an elite design and development agency. We craft high-performance websites, bespoke mobile apps, and premium brand identities.
-          </motion.p>
+        {/* 1. Deep Navy Color Grade (Shadows & Midtones) */}
+        <div className="absolute inset-0 bg-brand-navy/30 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-brand-navy/20 mix-blend-overlay" />
 
-          {/* CTA Row */}
-          <motion.div
-            variants={ctaVariants}
-            initial="hidden"
-            animate={animState}
-            className="flex flex-wrap items-center gap-4 mb-12"
-          >
-            <motion.a
-              href="#contact"
-              onClick={(e) => handleCTA(e, '#contact')}
-              whileHover={{ y: -3, scale: 1.02 }}
-              whileTap={{ y: 0, scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-7 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-full shadow-lg shadow-indigo-600/15 hover:shadow-indigo-600/25 transition-all duration-300"
-            >
-              Start a Project
-              <ArrowUpRight className="w-4 h-4" />
-            </motion.a>
-            
-            <motion.a
-              href="#portfolio"
-              onClick={(e) => handleCTA(e, '#portfolio')}
-              whileHover={{ y: -3, scale: 1.02 }}
-              whileTap={{ y: 0, scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-7 py-4 bg-[#FAFAF9] border border-[#0F0F0F]/10 hover:border-[#0F0F0F]/20 text-[#0F0F0F] font-medium rounded-full hover:bg-neutral-50 transition-all duration-300"
-            >
-              View Our Work
-            </motion.a>
-          </motion.div>
+        {/* 2. Warm Brand-Red/Coral Edge Glow (Highlights) */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(225,77,69,0.3)_0%,transparent_60%)] mix-blend-screen" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(225,77,69,0.15)_0%,transparent_50%)] mix-blend-screen" />
 
-          {/* Trust Row */}
-          <motion.div
-            variants={trustVariants}
-            initial="hidden"
-            animate={animState}
-            className="flex items-center gap-6 py-2 border-t border-[#0F0F0F]/5 w-full max-w-[480px]"
-          >
-            <div className="flex flex-col">
-              <span className="text-xl font-bold font-display text-[#0F0F0F]">50+</span>
-              <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">Projects Done</span>
-            </div>
-            <div className="h-8 w-px bg-[#0F0F0F]/5"></div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold font-display text-[#0F0F0F]">3</span>
-              <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">Disciplines</span>
-            </div>
-            <div className="h-8 w-px bg-[#0F0F0F]/5"></div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold font-display text-[#0F0F0F]">100%</span>
-              <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">In-House Quality</span>
-            </div>
-          </motion.div>
+        {/* 3. Text Contrast Protection (Centered & Bottom Gradient) */}
+        {/* Heavy central gradient strictly behind the text block for maximum legibility */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(15,15,15,0.5)_0%,rgba(15,15,15,0.05)_65%,transparent_100%)]" />
+
+        {/* Smooth dark gradient fading up from bottom for UI stability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F]/80 via-[#0F0F0F]/20 to-transparent" />
+      </div>
+
+      {/* --- FOREGROUND CONTENT --- */}
+      <div className="max-w-4xl mx-auto px-6 w-full relative z-10 flex flex-col items-center text-center">
+
+        {/* Eyebrow badge */}
+        <div className="hero-anim hero-anim-1 inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 border border-white/20 rounded-full mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse"></span>
+          <span className="text-[10px] font-bold tracking-wider text-white uppercase">
+            Web &bull; Mobile &bull; Design
+          </span>
         </div>
 
-        {/* Right Column (45%) */}
-        <div ref={rightColRef} className="lg:col-span-5 relative flex justify-center lg:justify-end z-10 mt-8 lg:mt-0">
-          {/* Main Visual Composition */}
-          <motion.div
-            variants={mockupVariants}
-            initial="hidden"
-            animate={animState}
-            className="relative w-full max-w-[420px] aspect-[4/3] rounded-2xl bg-white border border-[#0F0F0F]/5 shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden"
-          >
-            <img
-              src="/hero_dashboard.png"
-              alt="TribeSell premium dashboard"
-              className="w-full h-full object-cover object-top select-none"
-              draggable="false"
-            />
-          </motion.div>
+        {/* Sync-Rotating Headline with CSS Grid Jitter-Free Stacking */}
+        <h1 className="hero-anim hero-anim-2 text-white font-display font-semibold text-[8vw] min-[400px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-6 flex flex-col items-center w-full text-center whitespace-nowrap">
 
-          {/* Floating UI Chip 1: Design Check */}
-          <motion.div
-            variants={chip1Variants}
-            initial="hidden"
-            animate={animState}
-            className="absolute -top-6 left-4 md:-left-8 bg-white border border-[#0F0F0F]/5 rounded-xl px-4 py-3 shadow-[0_12px_30px_rgba(0,0,0,0.06)] flex items-center gap-2.5 z-20 pointer-events-none select-none"
-          >
-            <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-[#0F0F0F]">Design Verified</p>
-              <p className="text-[10px] text-neutral-400">Pixel Perfect Quality</p>
-            </div>
-          </motion.div>
+          {/* Row 1: Line 1 */}
+          <div className="grid grid-cols-1 grid-rows-1 place-items-center w-full px-4">
+            <div className="line1-0 col-start-1 row-start-1 opacity-100">We Build Premium</div>
+            <div className="line1-1 col-start-1 row-start-1 opacity-0">Our Expertise</div>
+          </div>
 
-          {/* Floating UI Chip 2: Client Satisfaction */}
-          <motion.div
-            variants={chip2Variants}
-            initial="hidden"
-            animate={animState}
-            className="absolute -bottom-6 right-4 md:-right-4 bg-white border border-[#0F0F0F]/5 rounded-xl px-4 py-3 shadow-[0_12px_30px_rgba(0,0,0,0.06)] flex items-center gap-2.5 z-20 pointer-events-none select-none"
-          >
-            <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
-              <Star className="w-4 h-4 fill-amber-500" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-[#0F0F0F]">98% Satisfaction</p>
-              <p className="text-[10px] text-neutral-400">Based on client reviews</p>
-            </div>
-          </motion.div>
+          {/* Row 2: Line 2 */}
+          <div className="grid grid-cols-1 grid-rows-1 place-items-center w-full text-brand-red mt-1 sm:mt-2 px-4">
+            <div className="line2-0 col-start-1 row-start-1 opacity-100">Digital Experiences.</div>
+            <div className="line2-1 col-start-1 row-start-1 opacity-0">Web Development.</div>
+            <div className="line2-2 col-start-1 row-start-1 opacity-0">Mobile Development.</div>
+            <div className="line2-3 col-start-1 row-start-1 opacity-0">Graphic Design.</div>
+          </div>
+        </h1>
 
-          {/* Floating UI Chip 3: Security */}
-          <motion.div
-            variants={chip3Variants}
-            initial="hidden"
-            animate={animState}
-            className="absolute top-1/2 -right-6 -translate-y-1/2 bg-white border border-[#0F0F0F]/5 rounded-xl px-4 py-3 shadow-[0_12px_30px_rgba(0,0,0,0.06)] flex items-center gap-2.5 z-20 pointer-events-none select-none hidden md:flex"
+        {/* Subheadline */}
+        <p className="hero-anim hero-anim-3 text-neutral-300 text-base md:text-xl font-normal leading-relaxed max-w-2xl mb-10 px-4">
+          TribeSell is an elite design and development agency. We craft high-performance websites, bespoke mobile apps, and premium brand identities.
+        </p>
+
+        {/* CTA Row */}
+        <div className="hero-anim hero-anim-4 flex flex-col sm:flex-row w-full sm:w-auto justify-center items-center gap-4 mb-14 px-6">
+          <a
+            href="#contact"
+            onClick={(e) => handleCTA(e, '#contact')}
+            className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-4 bg-brand-red hover:bg-[#c93e37] text-white font-medium rounded-full shadow-lg shadow-brand-red/20 hover:shadow-brand-red/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03]"
           >
-            <div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-600">
-              <ShieldCheck className="w-4.5 h-4.5" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-[#0F0F0F]">100% Secure Code</p>
-              <p className="text-[10px] text-neutral-400">Industry standards</p>
-            </div>
-          </motion.div>
+            Start a Project
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
+
+          <a
+            href="#portfolio"
+            onClick={(e) => handleCTA(e, '#portfolio')}
+            className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-4 bg-white/10 border border-white/20 hover:border-white/40 text-white font-medium rounded-full hover:bg-white/20 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03]"
+          >
+            View Our Work
+          </a>
         </div>
+
+        {/* Trust Row */}
+        <div className="hero-anim hero-anim-5 flex items-center justify-center gap-6 py-6 border-t border-white/10 w-full max-w-[480px]">
+          <div className="flex flex-col items-center">
+            <span className="text-2xl font-bold font-display text-white">50+</span>
+            <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">Projects Done</span>
+          </div>
+          <div className="h-10 w-px bg-white/10"></div>
+          <div className="flex flex-col items-center">
+            <span className="text-2xl font-bold font-display text-white">3</span>
+            <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">Disciplines</span>
+          </div>
+          <div className="h-10 w-px bg-white/10"></div>
+          <div className="flex flex-col items-center">
+            <span className="text-2xl font-bold font-display text-white">100%</span>
+            <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">In-House Quality</span>
+          </div>
+        </div>
+
       </div>
     </section>
   );

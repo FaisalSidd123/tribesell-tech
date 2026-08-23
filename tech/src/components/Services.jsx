@@ -1,182 +1,245 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Code2, Smartphone, Palette, ChevronRight } from 'lucide-react';
 
 const SERVICES = [
   {
+    num: '01',
     icon: Code2,
     title: 'Web Development',
-    description: 'High-performance, SEO-optimized, pixel-perfect web systems built with modern frameworks to drive your business forward.',
+    teaser: 'High-performance, SEO-optimized web systems.',
+    description: 'Pixel-perfect web systems built with modern frameworks to drive your business forward.',
     capabilities: [
       'Next.js & React Architectures',
       'Headless Commerce Systems',
       'API & Backend Integrations',
       'Core Web Vitals Optimization',
     ],
-    color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 shadow-[0_0_20px_rgba(79,70,229,0.15)]',
+    tags: ['React', 'Next.js', 'Performance'],
+    color: 'text-brand-red',
   },
   {
+    num: '02',
     icon: Smartphone,
     title: 'Mobile Development',
-    description: 'Bespoke native and hybrid mobile applications for iOS & Android with buttery-smooth interactions and offline-first capabilities.',
+    teaser: 'Bespoke native and hybrid mobile applications.',
+    description: 'Buttery-smooth interactions and offline-first capabilities for iOS & Android platforms.',
     capabilities: [
       'React Native & Flutter Apps',
       'Dynamic Sync & Push Systems',
       'Apple/Google Store Deployments',
       'Wearable & Device Integrations',
     ],
-    color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 shadow-[0_0_20px_rgba(79,70,229,0.15)]',
+    tags: ['iOS', 'Android', 'React Native'],
+    color: 'text-brand-red',
   },
   {
+    num: '03',
     icon: Palette,
     title: 'Graphic Design',
-    description: 'Sleek editorial identities, design system guidelines, and user experience layouts that build confidence and elevate brands.',
+    teaser: 'Sleek editorial identities and user experience layouts.',
+    description: 'Design system guidelines that build confidence and elevate brands across all touchpoints.',
     capabilities: [
       'UI/UX Design Systems',
       'Brand Identity & Guidelines',
       'Premium Pitch Deck Design',
       'Custom Mockups & Graphics',
     ],
-    color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 shadow-[0_0_20px_rgba(79,70,229,0.15)]',
+    tags: ['UI/UX', 'Branding', 'Figma'],
+    color: 'text-brand-red',
   },
 ];
 
-// Shared animation constants
-const ease = [0.16, 1, 0.3, 1];
-const viewport = { once: true, amount: 0.2 };
+const ServiceCard = ({ service }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const Icon = service.icon;
+
+  const handleFlip = () => setIsFlipped(!isFlipped);
+  
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleFlip();
+    }
+  };
+
+  return (
+    <div
+      className="group relative h-[420px] w-full cursor-pointer [perspective:1000px] outline-none"
+      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsFlipped(true); }}
+      onMouseLeave={() => { if (window.matchMedia('(hover: hover)').matches) setIsFlipped(false); }}
+      onClick={() => { if (!window.matchMedia('(hover: hover)').matches) handleFlip(); }}
+      onFocus={() => setIsFlipped(true)}
+      onBlur={() => setIsFlipped(false)}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      aria-label={`${service.title} Service Card. ${isFlipped ? 'Showing details.' : 'Press enter to flip for details.'}`}
+    >
+      {/* Lift & Glow Wrapper */}
+      <div className="w-full h-full transition-all duration-300 group-hover:scale-[1.03] group-focus:scale-[1.03] rounded-2xl relative">
+        
+        {/* Glow effect pseudo-element (Outer card glow) */}
+        <div className="absolute inset-0 rounded-2xl bg-brand-red/20 blur-2xl opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+        {/* 3D Wrapper */}
+        <div 
+          className="relative w-full h-full transition-transform duration-[600ms] [transform-style:preserve-3d] ease-[cubic-bezier(0.4,0.2,0.2,1)] motion-reduce:transition-none"
+          style={{ transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+        >
+          
+          {/* FRONT FACE */}
+          <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] bg-gradient-to-br from-[#1c1c1f] to-[#121214] border border-brand-red/10 shadow-[0_8px_30px_rgba(0,0,0,0.3)] group-hover:border-brand-red/40 group-focus:border-brand-red/40 rounded-2xl p-8 flex flex-col transition-all duration-300 z-10 overflow-hidden">
+            
+            {/* Oversized background numeral */}
+            <div className="absolute -top-6 -right-4 text-[120px] font-display font-bold text-white/[0.02] leading-none select-none pointer-events-none group-hover:text-brand-red/[0.05] transition-colors duration-300">
+              {service.num}
+            </div>
+
+            <div className="relative z-10 flex-1">
+              {/* Icon Container with Glow */}
+              <div className="relative mb-8 w-14 h-14">
+                {/* Glow Blob behind icon */}
+                <div className="absolute inset-0 bg-brand-red blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300" />
+                {/* Physical Icon Box */}
+                <div className={`relative w-full h-full rounded-2xl flex items-center justify-center bg-[#161618] border border-white/5 group-hover:border-brand-red/30 transition-colors duration-300 ${service.color}`}>
+                  <Icon className="w-6 h-6 drop-shadow-[0_0_10px_rgba(225,77,69,0.5)]" />
+                </div>
+              </div>
+
+              {/* Title & Teaser */}
+              <h3 className="text-[26px] font-display font-semibold text-white mb-4 group-hover:[text-shadow:_0_0_15px_rgba(225,77,69,0.3)] transition-all duration-300">
+                {service.title}
+              </h3>
+              <p className="text-neutral-400 text-[15px] leading-relaxed pr-4">
+                {service.teaser}
+              </p>
+            </div>
+
+            {/* Bottom Section: Tags & Hint */}
+            <div className="relative z-10 mt-auto pt-6 flex flex-col gap-6">
+              <div className="flex flex-wrap gap-2">
+                {service.tags.map(tag => (
+                  <span key={tag} className="px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5 text-neutral-400 text-[11px] font-medium tracking-wide uppercase group-hover:border-brand-red/20 group-hover:text-brand-red transition-colors duration-300">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              
+              <div className="flex items-center text-brand-red/70 text-[11px] font-bold tracking-widest uppercase gap-1.5 group-hover:text-brand-red transition-colors duration-300">
+                 <span className="hidden lg:inline">Explore</span>
+                 <span className="lg:hidden">Tap to see more</span>
+                 <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+              </div>
+            </div>
+          </div>
+
+          {/* BACK FACE */}
+          <div 
+            className="absolute inset-0 w-full h-full [backface-visibility:hidden] bg-gradient-to-br from-brand-red to-[#c93e37] border border-[#c93e37] shadow-inner rounded-2xl p-8 flex flex-col z-0"
+            style={{ transform: 'rotateY(180deg)' }}
+          >
+            <h3 className="text-xl font-display font-semibold text-white mb-3">
+              {service.title}
+            </h3>
+            <p className="text-white/90 text-[13px] leading-relaxed mb-6">
+              {service.description}
+            </p>
+
+            <div className="border-t border-white/20 pt-5 mt-auto mb-6">
+              <p className="text-[10px] font-bold tracking-wider text-white/70 uppercase mb-4">Included</p>
+              <ul className="space-y-2.5">
+                {service.capabilities.map((cap) => (
+                  <li key={cap} className="flex items-start gap-2.5 text-xs text-white">
+                    <div className="w-1 h-1 rounded-full bg-white/70 shrink-0 mt-1.5" />
+                    <span className="leading-tight">{cap}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <a 
+              href="#contact" 
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-white/80 transition-colors mt-auto w-max"
+              tabIndex={isFlipped ? 0 : -1}
+            >
+              Get started <ChevronRight className="w-4 h-4" />
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function Services() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (prefersReducedMotion) {
+      // Ensure elements are visible if reduced motion is enabled
+      gsap.set(".service-anim-item", { opacity: 1, y: 0, scale: 1 });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          toggleActions: "play none none none"
+        }
+      });
+
+      tl.fromTo(".service-header-item",
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power3.out" }
+      )
+      .fromTo(".service-card-wrapper",
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" },
+        "-=0.4"
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="services" className="py-32 bg-[#0F0F10] relative z-10 overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-32 bg-[#0F0F10] relative z-10 overflow-hidden">
 
       {/* Ambient glowing wash shape */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-[130px] pointer-events-none z-0" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-red/5 rounded-full blur-[130px] pointer-events-none z-0" />
 
-      {/* Ghost number background */}
-      <div className="absolute top-12 left-6 md:left-16 text-[180px] md:text-[240px] font-display font-bold text-white/[0.02] leading-none select-none pointer-events-none z-0">
-        01
-      </div>
+      {/* Dot Grid Pattern */}
+      <div 
+        className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)',
+          backgroundSize: '24px 24px'
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
 
-        {/* Section Header — Desktop: left heading + right stat */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16 md:mb-20">
-          {/* Left: Heading block */}
-          <div className="max-w-xl text-left">
-            {/* Eyebrow pill badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewport}
-              transition={{ duration: 0.6, ease }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-500/10 border border-indigo-500/15 rounded-full mb-5"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-              <span className="text-[10px] font-bold tracking-[0.15em] text-indigo-400 uppercase">Our Expertise</span>
-            </motion.div>
-
-            {/* Split-weight headline */}
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewport}
-              transition={{ duration: 0.8, ease, delay: 0.1 }}
-              className="text-3xl md:text-4xl font-display font-bold tracking-tight leading-[1.15] mb-6 max-w-xl"
-            >
-              <span className="text-white">Elite digital disciplines </span>
-              <span className="text-neutral-500">combined under one roof.</span>
-            </motion.h2>
-
-            {/* Subtext */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewport}
-              transition={{ duration: 0.8, ease, delay: 0.2 }}
-              className="text-neutral-400 text-base leading-relaxed max-w-[520px]"
-            >
-              We operate at the intersection of robust code and fine art. Here is how we help modern startups and enterprise teams build digital products.
-            </motion.p>
-          </div>
-
-          {/* Right: Stat card counterpart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewport}
-            transition={{ duration: 0.7, ease, delay: 0.3 }}
-            className="flex items-center gap-6 lg:gap-8 shrink-0"
-          >
-            <div className="flex flex-col items-center text-center px-5 py-4 bg-white/[0.03] border border-white/5 rounded-xl">
-              <span className="text-2xl font-display font-bold text-indigo-400">3</span>
-              <span className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase mt-1">Core<br/>Disciplines</span>
-            </div>
-            <div className="flex flex-col items-center text-center px-5 py-4 bg-white/[0.03] border border-white/5 rounded-xl">
-              <span className="text-2xl font-display font-bold text-indigo-400">50+</span>
-              <span className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase mt-1">Projects<br/>Delivered</span>
-            </div>
-            <div className="flex flex-col items-center text-center px-5 py-4 bg-white/[0.03] border border-white/5 rounded-xl">
-              <span className="text-2xl font-display font-bold text-indigo-400">100%</span>
-              <span className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase mt-1">In-House<br/>Quality</span>
-            </div>
-          </motion.div>
+        {/* Section Header */}
+        <div className="flex justify-center mb-16 md:mb-20">
+          <h2 className="service-anim-item service-header-item text-4xl md:text-5xl lg:text-6xl font-display font-semibold text-white text-center opacity-0">
+            Our Expertise.
+          </h2>
         </div>
 
-        {/* Services Grid — staggered slide-up */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {SERVICES.map((service, idx) => {
-            const Icon = service.icon;
-            return (
-              <motion.div
-                key={service.title}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={viewport}
-                transition={{ duration: 0.8, ease, delay: idx * 0.12 }}
-                whileHover={{ y: -6, transition: { duration: 0.25, ease } }}
-                className="bg-[#161618] border border-white/5 rounded-2xl p-8 text-left hover:border-indigo-500/20 hover:shadow-[0_20px_50px_rgba(79,70,229,0.06)] transition-all duration-300 flex flex-col justify-between group"
-              >
-                <div>
-                  {/* Icon Badge — scale + rotate entrance */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8, rotate: -8 }}
-                    whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                    viewport={viewport}
-                    transition={{ duration: 0.6, ease, delay: 0.3 + idx * 0.12 }}
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center border mb-6 ${service.color}`}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </motion.div>
-
-                  {/* Title */}
-                  <h3 className="text-xl font-display font-semibold text-white mb-4">
-                    {service.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-neutral-400 text-sm leading-relaxed mb-8">
-                    {service.description}
-                  </p>
-                </div>
-
-                {/* Capabilities List */}
-                <div className="border-t border-white/5 pt-6 mt-auto">
-                  <p className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase mb-4">Capabilities</p>
-                  <ul className="space-y-3">
-                    {service.capabilities.map((cap) => (
-                      <li
-                        key={cap}
-                        className="flex items-center gap-2 text-xs text-neutral-300 group-hover:text-neutral-200 transition-colors duration-200"
-                      >
-                        <ChevronRight className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                        <span>{cap}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-            );
-          })}
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {SERVICES.map((service) => (
+            <div key={service.title} className="service-anim-item service-card-wrapper opacity-0">
+              <ServiceCard service={service} />
+            </div>
+          ))}
         </div>
       </div>
     </section>
