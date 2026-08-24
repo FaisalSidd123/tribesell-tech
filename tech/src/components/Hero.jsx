@@ -3,9 +3,9 @@ import gsap from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
 
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1920&q=80&auto=format", // Web Dev setup
-  "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1920&q=80&auto=format", // Mobile App interface mockup
-  "https://images.unsplash.com/photo-1542744094-3a3172720449?w=1920&q=80&auto=format"  // Digital design workspace
+  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1920&q=80&auto=format", // 1. Web Development
+  "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1920&q=80&auto=format", // 2. Mobile App Development
+  "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1920&q=80&auto=format"  // 3. Graphic & UI/UX Design
 ];
 
 export default function Hero() {
@@ -83,7 +83,7 @@ export default function Hero() {
 
       // Set initial state: image 0 visible (zIndex: 2), rest hidden (zIndex: 1)
       images.forEach((img, i) => {
-        gsap.set(img, { opacity: i === 0 ? 0.85 : 0, scale: 1, zIndex: i === 0 ? 2 : 1 });
+        gsap.set(img, { opacity: i === 0 ? 0.45 : 0, scale: 1, zIndex: i === 0 ? 2 : 1 });
       });
 
       // Initial Ken Burns zoom for first image
@@ -94,8 +94,8 @@ export default function Hero() {
         const nextIndex = (currentIndex + 1) % images.length;
         const nextImg = images[nextIndex];
 
-        // Prepare next image underneath with full opacity 0.85 & reset scale
-        gsap.set(nextImg, { zIndex: 1, opacity: 0.85, scale: 1 });
+        // Prepare next image underneath with opacity 0.45 & reset scale
+        gsap.set(nextImg, { zIndex: 1, opacity: 0.45, scale: 1 });
 
         // Start Ken Burns zoom on next image immediately
         gsap.to(nextImg, { scale: 1.08, duration: 5.5, ease: 'none' });
@@ -141,28 +141,28 @@ export default function Hero() {
       {/* --- PREMIUM PHOTOGRAPHIC BACKGROUND --- */}
       <div className="hero-bg-wrapper opacity-0 absolute inset-0 z-0 overflow-hidden bg-[#0F0F0F]">
 
-        {/* Images with enhanced visibility */}
+        {/* Images with perfect balanced opacity */}
         {HERO_IMAGES.map((src, idx) => (
           <div
             key={idx}
-            className={`hero-bg-img absolute inset-0 bg-cover bg-center ${idx === 0 ? 'opacity-85' : 'opacity-0'}`}
+            className={`hero-bg-img absolute inset-0 bg-cover bg-center ${idx === 0 ? 'opacity-45' : 'opacity-0'}`}
             style={{ backgroundImage: `url(${src})` }}
           />
         ))}
 
         {/* --- COLOR GRADING & CONTRAST OVERLAYS --- */}
 
-        {/* 1. Subtle Navy Accent Tint */}
-        <div className="absolute inset-0 bg-brand-navy/10 mix-blend-multiply" />
+        {/* 1. Dark Base Wash */}
+        <div className="absolute inset-0 bg-[#0F0F0F]/50 z-0" />
 
         {/* 2. Warm Brand-Red/Coral Accent Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(225,77,69,0.2)_0%,transparent_60%)] mix-blend-screen" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(225,77,69,0.25)_0%,transparent_60%)] mix-blend-screen" />
 
-        {/* 3. Soft Text Contrast Protection (Legibility without dimming photo) */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(15,15,15,0.35)_0%,rgba(15,15,15,0.05)_75%,transparent_100%)]" />
+        {/* 3. Text Contrast Protection (High Legibility behind headline) */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(15,15,15,0.75)_0%,rgba(15,15,15,0.2)_70%,transparent_100%)]" />
 
         {/* Smooth dark gradient fading up from bottom */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-[#0F0F0F]/40 to-transparent" />
       </div>
 
       {/* --- FOREGROUND CONTENT --- */}
