@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd tech && npm run build",
+  "outputDirectory": "tech/dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
