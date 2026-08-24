@@ -124,7 +124,7 @@ export default function Portfolio() {
                   layoutId={isReducedMotion ? undefined : `image-${project.id}`}
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover object-center select-none opacity-90 group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  className="w-full h-full object-cover object-center select-none opacity-100 group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                   draggable="false"
                 />
                 <motion.div

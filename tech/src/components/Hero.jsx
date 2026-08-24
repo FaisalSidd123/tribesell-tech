@@ -3,9 +3,9 @@ import gsap from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
 
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1920&q=80&auto=format", // Web Dev (laptop code)
-  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80&auto=format", // Mobile Dev (clean dark UI dashboard on phone)
-  "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=1920&q=80&auto=format"  // UI/UX Design (wireframing/design process)
+  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1920&q=80&auto=format", // High-contrast web dev setup
+  "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1920&q=80&auto=format", // Bright mobile app interface mockup
+  "https://images.unsplash.com/photo-1542744094-3a3172720449?w=1920&q=80&auto=format"  // Bright UI/UX design session
 ];
 
 export default function Hero() {
@@ -82,23 +82,37 @@ export default function Hero() {
       const images = gsap.utils.toArray('.hero-bg-img');
       let currentBgIndex = 0;
 
+      // Ensure proper stacking order so active image is always on top of incoming image
+      images.forEach((img, idx) => {
+        gsap.set(img, { zIndex: idx === 0 ? 2 : 1, opacity: idx === 0 ? 0.85 : 0 });
+      });
+
       // Initial Ken Burns for first image
       gsap.to(images[0], { scale: 1.08, duration: 6, ease: 'none' });
 
       const animateBg = () => {
+        const currentImg = images[currentBgIndex];
         const nextBgIndex = (currentBgIndex + 1) % images.length;
+        const nextImg = images[nextBgIndex];
 
-        // Fade out current
-        gsap.to(images[currentBgIndex], { opacity: 0, duration: 1.5, ease: 'none' });
+        // 1. Put incoming next image behind current with full opacity (no black gap)
+        gsap.set(nextImg, { zIndex: 1, opacity: 0.85, scale: 1 });
 
-        // Fade in next and start its Ken Burns
-        gsap.fromTo(images[nextBgIndex],
-          { opacity: 0, scale: 1 },
-          { opacity: 1, scale: 1.08, duration: 6, ease: 'none' }
-        );
+        // 2. Keep current image on top and fade it out smoothly over next image
+        gsap.set(currentImg, { zIndex: 2 });
+        gsap.to(currentImg, {
+          opacity: 0,
+          duration: 1.5,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            gsap.set(currentImg, { zIndex: 0 });
+          }
+        });
+
+        // 3. Smooth Ken Burns zoom on next image
+        gsap.to(nextImg, { scale: 1.08, duration: 6, ease: 'power1.out' });
 
         currentBgIndex = nextBgIndex;
-        // Wait 4.5s then trigger next loop
         gsap.delayedCall(4.5, animateBg);
       };
 
@@ -125,46 +139,43 @@ export default function Hero() {
       {/* --- PREMIUM PHOTOGRAPHIC BACKGROUND --- */}
       <div className="hero-bg-wrapper opacity-0 absolute inset-0 z-0 overflow-hidden bg-[#0F0F0F]">
 
-        {/* Images */}
+        {/* Images with enhanced visibility */}
         {HERO_IMAGES.map((src, idx) => (
           <div
             key={idx}
-            className={`hero-bg-img absolute inset-0 bg-cover bg-center ${idx === 0 ? 'opacity-100' : 'opacity-0'}`}
+            className={`hero-bg-img absolute inset-0 bg-cover bg-center ${idx === 0 ? 'opacity-85' : 'opacity-0'}`}
             style={{ backgroundImage: `url(${src})` }}
           />
         ))}
 
         {/* --- COLOR GRADING & CONTRAST OVERLAYS --- */}
 
-        {/* 1. Deep Navy Color Grade (Shadows & Midtones) */}
-        <div className="absolute inset-0 bg-brand-navy/30 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-brand-navy/20 mix-blend-overlay" />
+        {/* 1. Subtle Navy Accent Tint */}
+        <div className="absolute inset-0 bg-brand-navy/10 mix-blend-multiply" />
 
-        {/* 2. Warm Brand-Red/Coral Edge Glow (Highlights) */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(225,77,69,0.3)_0%,transparent_60%)] mix-blend-screen" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(225,77,69,0.15)_0%,transparent_50%)] mix-blend-screen" />
+        {/* 2. Warm Brand-Red/Coral Accent Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(225,77,69,0.2)_0%,transparent_60%)] mix-blend-screen" />
 
-        {/* 3. Text Contrast Protection (Centered & Bottom Gradient) */}
-        {/* Heavy central gradient strictly behind the text block for maximum legibility */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(15,15,15,0.5)_0%,rgba(15,15,15,0.05)_65%,transparent_100%)]" />
+        {/* 3. Soft Text Contrast Protection (Legibility without dimming photo) */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(15,15,15,0.35)_0%,rgba(15,15,15,0.05)_75%,transparent_100%)]" />
 
-        {/* Smooth dark gradient fading up from bottom for UI stability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F]/80 via-[#0F0F0F]/20 to-transparent" />
+        {/* Smooth dark gradient fading up from bottom */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-transparent to-transparent" />
       </div>
 
       {/* --- FOREGROUND CONTENT --- */}
       <div className="max-w-4xl mx-auto px-6 w-full relative z-10 flex flex-col items-center text-center">
 
         {/* Eyebrow badge */}
-        <div className="hero-anim hero-anim-1 inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 border border-white/20 rounded-full mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse"></span>
-          <span className="text-[10px] font-bold tracking-wider text-white uppercase">
+        <div className="hero-anim hero-anim-1 inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/10 border border-white/25 rounded-full mb-6 backdrop-blur-sm shadow-sm">
+          <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
+          <span className="text-[11px] font-extrabold tracking-widest text-white uppercase font-sans">
             Web &bull; Mobile &bull; Design
           </span>
         </div>
 
         {/* Sync-Rotating Headline with CSS Grid Jitter-Free Stacking */}
-        <h1 className="hero-anim hero-anim-2 text-white font-display font-semibold text-[8vw] min-[400px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-6 flex flex-col items-center w-full text-center whitespace-nowrap">
+        <h1 className="hero-anim hero-anim-2 text-white font-display font-extrabold text-[8vw] min-[400px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] tracking-tight mb-6 flex flex-col items-center w-full text-center whitespace-nowrap drop-shadow-sm">
 
           {/* Row 1: Line 1 */}
           <div className="grid grid-cols-1 grid-rows-1 place-items-center w-full px-4">
@@ -182,7 +193,7 @@ export default function Hero() {
         </h1>
 
         {/* Subheadline */}
-        <p className="hero-anim hero-anim-3 text-neutral-300 text-base md:text-xl font-normal leading-relaxed max-w-2xl mb-10 px-4">
+        <p className="hero-anim hero-anim-3 text-neutral-200 text-base md:text-xl font-normal leading-relaxed max-w-2xl mb-10 px-4 tracking-normal drop-shadow-xs">
           TribeSell is an elite design and development agency. We craft high-performance websites, bespoke mobile apps, and premium brand identities.
         </p>
 
@@ -191,16 +202,16 @@ export default function Hero() {
           <a
             href="#contact"
             onClick={(e) => handleCTA(e, '#contact')}
-            className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-4 bg-brand-red hover:bg-[#c93e37] text-white font-medium rounded-full shadow-lg shadow-brand-red/20 hover:shadow-brand-red/30 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03]"
+            className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-8 py-4 bg-brand-red hover:bg-[#c93e37] text-white font-semibold tracking-wide rounded-full shadow-lg shadow-brand-red/25 hover:shadow-brand-red/40 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03]"
           >
             Start a Project
-            <ArrowUpRight className="w-4 h-4" />
+            <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
           </a>
 
           <a
             href="#portfolio"
             onClick={(e) => handleCTA(e, '#portfolio')}
-            className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-4 bg-white/10 border border-white/20 hover:border-white/40 text-white font-medium rounded-full hover:bg-white/20 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03]"
+            className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-8 py-4 bg-white/12 border border-white/25 hover:border-white/50 text-white font-semibold tracking-wide rounded-full hover:bg-white/20 transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] backdrop-blur-sm"
           >
             View Our Work
           </a>

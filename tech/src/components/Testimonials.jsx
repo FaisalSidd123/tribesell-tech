@@ -70,7 +70,7 @@ export default function Testimonials() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewport}
             transition={{ duration: 0.8, ease, delay: 0.1 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-[#0F0F0F] mb-4"
+            className="text-3xl md:text-4xl lg:text-5xl font-display font-extrabold text-[#0F0F0F] tracking-tight mb-4"
           >
             What Our Clients Say
           </motion.h2>
@@ -80,7 +80,7 @@ export default function Testimonials() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewport}
             transition={{ duration: 0.8, ease, delay: 0.2 }}
-            className="text-neutral-500 text-sm md:text-base max-w-md"
+            className="text-neutral-600 text-base md:text-lg max-w-md font-normal"
           >
             Real feedback from the brands and builders we partner with.
           </motion.p>
@@ -113,7 +113,7 @@ export default function Testimonials() {
               </div>
 
               <div className="relative z-10 flex-grow flex flex-col justify-between h-full">
-                <p className="text-[#0F0F0F] font-display text-xs sm:text-sm md:text-lg font-medium leading-relaxed mb-6 md:mb-8 pr-6 md:pr-8">
+                <p className="text-[#0F0F0F] font-sans text-xs sm:text-sm md:text-base font-normal leading-relaxed mb-6 md:mb-8 pr-6 md:pr-8 tracking-normal">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
 
@@ -124,9 +124,9 @@ export default function Testimonials() {
                     className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-[#0F0F0F]/5 shrink-0"
                   />
                   <div className="min-w-0">
-                    <p className="text-[11px] md:text-sm font-semibold text-[#0F0F0F] truncate">{testimonial.author}</p>
-                    <p className="text-[9px] md:text-xs text-neutral-400 truncate">
-                      {testimonial.role} &bull; <span className="text-brand-red">{testimonial.company}</span>
+                    <p className="text-[11px] md:text-sm font-bold text-[#0F0F0F] truncate">{testimonial.author}</p>
+                    <p className="text-[9px] md:text-xs text-neutral-500 font-medium truncate">
+                      {testimonial.role} &bull; <span className="text-brand-red font-semibold">{testimonial.company}</span>
                     </p>
                   </div>
                 </div>
