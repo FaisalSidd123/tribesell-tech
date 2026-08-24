@@ -3,17 +3,17 @@ import gsap from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
 
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1920&q=80&auto=format", // High-contrast web dev setup
-  "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1920&q=80&auto=format", // Bright mobile app interface mockup
-  "https://images.unsplash.com/photo-1542744094-3a3172720449?w=1920&q=80&auto=format"  // Bright UI/UX design session
+  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1920&q=80&auto=format", // Web Dev setup
+  "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1920&q=80&auto=format", // Mobile App interface mockup
+  "https://images.unsplash.com/photo-1542744094-3a3172720449?w=1920&q=80&auto=format"  // Digital design workspace
 ];
 
 export default function Hero() {
   const heroRef = useRef(null);
 
-  // Preload secondary images
+  // Preload all 3 background images immediately
   useEffect(() => {
-    HERO_IMAGES.slice(1).forEach(src => {
+    HERO_IMAGES.forEach(src => {
       const img = new Image();
       img.src = src;
     });
@@ -75,48 +75,50 @@ export default function Hero() {
         .to('.line1-1', { y: -15, opacity: 0, duration: tOut, ease: 'power2.in' }, 'f3-out')
         .to('.line2-3', { y: -15, opacity: 0, duration: tOut, ease: 'power2.in' }, 'f3-out')
         .fromTo('.line1-0', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f3-out+=${overlap}`)
-        .fromTo('.line2-0', { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f3-out+=${overlap}`);
-      // Timeline ends here. repeatDelay handles the Frame 0 hold.
+        .to('.line2-0', { y: 0, opacity: 1, duration: tIn, ease: 'power2.out', immediateRender: false }, `f3-out+=${overlap}`);
 
-      // Background Crossfade & Ken Burns Loop
+      // --- BULLETPROOF SEAMLESS BACKGROUND SLIDESHOW TIMELINE ---
       const images = gsap.utils.toArray('.hero-bg-img');
-      let currentBgIndex = 0;
+      let currentIndex = 0;
 
-      // Ensure proper stacking order so active image is always on top of incoming image
-      images.forEach((img, idx) => {
-        gsap.set(img, { zIndex: idx === 0 ? 2 : 1, opacity: idx === 0 ? 0.85 : 0 });
+      // Set initial state: image 0 visible (zIndex: 2), rest hidden (zIndex: 1)
+      images.forEach((img, i) => {
+        gsap.set(img, { opacity: i === 0 ? 0.85 : 0, scale: 1, zIndex: i === 0 ? 2 : 1 });
       });
 
-      // Initial Ken Burns for first image
-      gsap.to(images[0], { scale: 1.08, duration: 6, ease: 'none' });
+      // Initial Ken Burns zoom for first image
+      gsap.to(images[0], { scale: 1.08, duration: 5.5, ease: 'none' });
 
-      const animateBg = () => {
-        const currentImg = images[currentBgIndex];
-        const nextBgIndex = (currentBgIndex + 1) % images.length;
-        const nextImg = images[nextBgIndex];
+      const cycleNextImage = () => {
+        const currentImg = images[currentIndex];
+        const nextIndex = (currentIndex + 1) % images.length;
+        const nextImg = images[nextIndex];
 
-        // 1. Put incoming next image behind current with full opacity (no black gap)
+        // Prepare next image underneath with full opacity 0.85 & reset scale
         gsap.set(nextImg, { zIndex: 1, opacity: 0.85, scale: 1 });
 
-        // 2. Keep current image on top and fade it out smoothly over next image
-        gsap.set(currentImg, { zIndex: 2 });
+        // Start Ken Burns zoom on next image immediately
+        gsap.to(nextImg, { scale: 1.08, duration: 5.5, ease: 'none' });
+
+        // Keep current image on top (zIndex: 2) and fade it out over 1.5s reveal next image underneath
         gsap.to(currentImg, {
           opacity: 0,
           duration: 1.5,
           ease: 'power2.inOut',
           onComplete: () => {
-            gsap.set(currentImg, { zIndex: 0 });
+            // Once faded out, demote current image zIndex to 1 and promote next image to zIndex 2
+            gsap.set(currentImg, { zIndex: 1 });
+            gsap.set(nextImg, { zIndex: 2 });
           }
         });
 
-        // 3. Smooth Ken Burns zoom on next image
-        gsap.to(nextImg, { scale: 1.08, duration: 6, ease: 'power1.out' });
-
-        currentBgIndex = nextBgIndex;
-        gsap.delayedCall(4.5, animateBg);
+        currentIndex = nextIndex;
+        // Schedule next transition after 4 seconds hold
+        gsap.delayedCall(4, cycleNextImage);
       };
 
-      gsap.delayedCall(4.5, animateBg);
+      // Start initial cycle after 4 seconds
+      gsap.delayedCall(4, cycleNextImage);
 
     }, heroRef);
 
