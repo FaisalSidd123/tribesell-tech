@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, CheckCircle2, ArrowRight } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 // Shared animation constants
 const ease = [0.16, 1, 0.3, 1];
 const viewport = { once: true, amount: 0.2 };
 
 export default function Contact() {
-  const [formData, setFormData] = useState({ name: '', email: '', budget: '$10k - $25k', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', service: 'Web Development', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -20,12 +21,30 @@ export default function Contact() {
     
     setIsSubmitting(true);
     
-    // Simulate API request
-    setTimeout(() => {
+    // EmailJS integration
+    emailjs.send(
+      'service_99g557c', // Service ID provided
+      'template_x9qjank', // Template ID
+      {
+        from_name: formData.name,
+        email_id: formData.email, // Matches {{email_id}} in template
+        message: formData.message,
+        service: formData.service
+      },
+      {
+        publicKey: 'KjG_-tf52_1Njgm8c' // Public Key
+      }
+    )
+    .then(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
-      setFormData({ name: '', email: '', budget: '$10k - $25k', message: '' });
-    }, 1500);
+      setFormData({ name: '', email: '', service: 'Web Development', message: '' });
+    })
+    .catch((error) => {
+      setIsSubmitting(false);
+      console.error('Email sending failed:', error);
+      alert('Failed to send message: ' + (error?.text || error?.message || JSON.stringify(error)));
+    });
   };
 
   return (
@@ -54,7 +73,7 @@ export default function Contact() {
           <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-red/5 rounded-full blur-[80px] pointer-events-none" />
 
           {/* Left Column (Info) */}
-          <div className="lg:col-span-5 flex flex-col justify-between relative z-10">
+          <div className="lg:col-span-5 flex flex-col relative z-10">
             <div>
               {/* Eyebrow pill badge */}
               <motion.div
@@ -98,15 +117,9 @@ export default function Contact() {
               className="space-y-4"
             >
               <div>
-                <p className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase">Direct Email</p>
-                <a href="mailto:hello@tribesell.com" className="text-base font-semibold text-white hover:text-brand-red transition-colors">
-                  hello@tribesell.com
-                </a>
-              </div>
-              <div>
                 <p className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase">Office Location</p>
                 <p className="text-sm font-medium text-neutral-300">
-                  San Francisco &bull; Berlin &bull; Remote
+                  Rehman tower, Gulistan e Johr, Karachi
                 </p>
               </div>
             </motion.div>
@@ -176,21 +189,22 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* Project Budget Selection */}
+                {/* Service Selection */}
                 <div className="flex flex-col text-left">
-                  <label htmlFor="budget" className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">
-                    Estimated Budget Range
+                  <label htmlFor="service" className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">
+                    Service Required
                   </label>
                   <select
-                    id="budget"
-                    value={formData.budget}
-                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                    id="service"
+                    value={formData.service}
+                    onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                     className="w-full px-4 py-3 bg-neutral-900 border border-white/10 focus:border-brand-red focus:bg-neutral-950 rounded-lg text-sm text-white outline-hidden transition-all cursor-pointer"
                   >
-                    <option value="Less than $10k">Less than $10,000</option>
-                    <option value="$10k - $25k">$10,000 &ndash; $25,000</option>
-                    <option value="$25k - $50k">$25,000 &ndash; $50,000</option>
-                    <option value="$50k+">$50,000 +</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Mobile App Development">Mobile App Development</option>
+                    <option value="UI/UX & Branding">UI/UX & Branding</option>
+                    <option value="Custom Software">Custom Software</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
 

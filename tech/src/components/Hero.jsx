@@ -136,7 +136,7 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden flex items-center justify-center bg-[#0F0F0F]"
+      className="relative h-[100vh] pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden flex items-center justify-center bg-[#0F0F0F]"
     >
       {/* --- PREMIUM PHOTOGRAPHIC BACKGROUND --- */}
       <div className="hero-bg-wrapper opacity-0 absolute inset-0 z-0 overflow-hidden bg-[#0F0F0F]">
