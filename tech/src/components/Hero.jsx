@@ -172,7 +172,7 @@ export default function Hero() {
         <div className="hero-anim hero-anim-1 inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/10 border border-white/25 rounded-full mb-6 backdrop-blur-sm shadow-sm">
           <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
           <span className="text-[11px] font-extrabold tracking-widest text-white uppercase font-sans">
-            Web &bull; Mobile &bull; Design
+            Web &bull; Mobile &bull; Design &bull; Marketing
           </span>
         </div>
 
@@ -190,7 +190,7 @@ export default function Hero() {
             <div className="line2-0 col-start-1 row-start-1 opacity-100">Digital Experiences.</div>
             <div className="line2-1 col-start-1 row-start-1 opacity-0">Web Development.</div>
             <div className="line2-2 col-start-1 row-start-1 opacity-0">Mobile Development.</div>
-            <div className="line2-3 col-start-1 row-start-1 opacity-0">Graphic Design.</div>
+            <div className="line2-3 col-start-1 row-start-1 opacity-0">Digital Marketing.</div>
           </div>
         </h1>
 
@@ -227,7 +227,7 @@ export default function Hero() {
           </div>
           <div className="h-10 w-px bg-white/10"></div>
           <div className="flex flex-col items-center">
-            <span className="text-2xl font-bold font-display text-white">3</span>
+            <span className="text-2xl font-bold font-display text-white">4</span>
             <span className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">Disciplines</span>
           </div>
           <div className="h-10 w-px bg-white/10"></div>

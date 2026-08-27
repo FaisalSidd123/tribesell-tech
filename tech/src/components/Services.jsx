@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Code2, Smartphone, Palette, ChevronRight } from 'lucide-react';
+import { Code2, Smartphone, Palette, Megaphone, ChevronRight } from 'lucide-react';
 
 const SERVICES = [
   {
@@ -47,6 +47,21 @@ const SERVICES = [
       'Custom Mockups & Graphics',
     ],
     tags: ['UI/UX', 'Branding', 'Figma'],
+    color: 'text-brand-red',
+  },
+  {
+    num: '04',
+    icon: Megaphone,
+    title: 'Digital Marketing',
+    teaser: 'Data-driven growth strategies & targeted campaigns.',
+    description: 'Scalable marketing funnels, SEO campaigns, and social media growth strategies designed to convert.',
+    capabilities: [
+      'Search Engine Optimization (SEO)',
+      'Paid Ads & Performance Marketing',
+      'Social Media Strategy & Content',
+      'Conversion Rate Optimization (CRO)',
+    ],
+    tags: ['SEO', 'PPC', 'Growth Marketing'],
     color: 'text-brand-red',
   },
 ];
@@ -234,7 +249,7 @@ export default function Services() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {SERVICES.map((service) => (
             <div key={service.title} className="service-anim-item service-card-wrapper opacity-0">
               <ServiceCard service={service} />
