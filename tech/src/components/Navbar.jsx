@@ -37,24 +37,21 @@ export default function Navbar({ theme = 'light' }) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
           ? isDark
             ? 'bg-[#0F0F10]/85 backdrop-blur-md border-b border-white/5 shadow-xs py-4'
             : 'bg-[#FAFAF9]/85 backdrop-blur-md border-b border-[#0F0F0F]/5 shadow-xs py-4'
           : 'bg-transparent border-b border-transparent py-6'
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between relative">
         {/* Logo (Left) */}
-        <a
-          href="#"
-          className={`flex items-center gap-2.5 text-xl font-display font-bold transition-colors duration-300 relative z-10 ${
-            isDark ? 'text-white' : 'text-[#0F0F0F]'
-          }`}
-        >
-          <img src="/tribesell_logo.png" alt="TribeSell" className="w-8 h-8 object-contain" />
-          <span>TribeSell</span>
+        <a href="#" className="flex items-center relative z-10 shrink-0">
+          <img
+            src={isDark ? '/tribesell-tech-navbar-white.png' : '/tribesell-tech-navbar-dark.png'}
+            alt="TribeSell Tech"
+            className="h-8 md:h-9 w-auto object-contain transition-opacity duration-300"
+          />
         </a>
 
         {/* Desktop Nav Links (Center) */}
@@ -64,11 +61,10 @@ export default function Navbar({ theme = 'light' }) {
               key={link.name}
               href={link.href}
               onClick={(e) => handleLinkClick(e, link.href)}
-              className={`text-sm font-medium transition-colors duration-300 ${
-                isDark
+              className={`text-sm font-medium transition-colors duration-300 ${isDark
                   ? 'text-white/70 hover:text-brand-red'
                   : 'text-[#0F0F0F]/70 hover:text-brand-red'
-              }`}
+                }`}
             >
               {link.name}
             </a>
@@ -88,9 +84,8 @@ export default function Navbar({ theme = 'light' }) {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`md:hidden p-1.5 transition-colors duration-300 ${
-              isDark ? 'text-white/80 hover:text-brand-red' : 'text-[#0F0F0F]/80 hover:text-brand-red'
-            }`}
+            className={`md:hidden p-1.5 transition-colors duration-300 ${isDark ? 'text-white/80 hover:text-brand-red' : 'text-[#0F0F0F]/80 hover:text-brand-red'
+              }`}
             aria-label="Toggle menu"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -101,11 +96,10 @@ export default function Navbar({ theme = 'light' }) {
       {/* Mobile Menu */}
       {isOpen && (
         <div
-          className={`md:hidden fixed inset-x-0 top-[72px] border-b shadow-lg px-6 py-8 flex flex-col gap-6 animate-in fade-in slide-in-from-top-5 duration-200 ${
-            isDark
+          className={`md:hidden fixed inset-x-0 top-[72px] border-b shadow-lg px-6 py-8 flex flex-col gap-6 animate-in fade-in slide-in-from-top-5 duration-200 ${isDark
               ? 'bg-[#0F0F10] border-white/5 shadow-black/40'
               : 'bg-[#FAFAF9] border-[#0F0F0F]/5 shadow-neutral-200'
-          }`}
+            }`}
         >
           <div className="flex flex-col gap-4">
             {navLinks.map((link) => (
@@ -113,9 +107,8 @@ export default function Navbar({ theme = 'light' }) {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleLinkClick(e, link.href)}
-                className={`text-lg font-medium transition-colors duration-300 ${
-                  isDark ? 'text-white/80 hover:text-brand-red' : 'text-[#0F0F0F]/80 hover:text-brand-red'
-                }`}
+                className={`text-lg font-medium transition-colors duration-300 ${isDark ? 'text-white/80 hover:text-brand-red' : 'text-[#0F0F0F]/80 hover:text-brand-red'
+                  }`}
               >
                 {link.name}
               </a>
